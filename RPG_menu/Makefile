@@ -5,33 +5,36 @@
 ## makes the file
 ##
 
-SRC		=	menu.c \
+SRC			=	menu.c \
+				get_keyboard_input.c \
 
-OBJ		=	$(SRC:.c=.o)
+OBJ			=	$(SRC:.c=.o)
 
-FLAGS	=	-Wall \
-			-Wextra \
-			-o \
+FLAGS		=	-Wall \
+				-Wextra \
+				-o \
 
-NAME	=	menu
+NAME		=	menu
 
-LIB		=	-lcsfml-graphics \
-			-lcsfml-system \
-			-lcsfml-audio \
-			-lcsfml-window \
+CPPFLAGS	= -I include/
 
-all		:	$(OBJ)
-			gcc $(FLAGS) $(NAME) $(OBJ) $(LIB)
+LIB			=	-lcsfml-graphics \
+				-lcsfml-system \
+				-lcsfml-audio \
+				-lcsfml-window \
 
-clean	:
-			rm -f $(OBJ)
+all			:	$(OBJ)
+				gcc $(FLAGS) $(NAME) $(OBJ) $(LIB)
 
-fclean	:	clean
-			rm -f $(NAME)
+clean		:
+				rm -f $(OBJ)
 
-re		:	clean all
+fclean		:	clean
+				rm -f $(NAME)
 
-plus	:	all clean
-			clear;
+re			:	clean all
 
-obj		: $(OBJ)
+plus		:	all clean
+				clear;
+
+obj			:	$(OBJ)

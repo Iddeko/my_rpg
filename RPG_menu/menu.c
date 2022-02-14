@@ -6,6 +6,9 @@
 */
 
 #include "include/includes.h"
+#include "keyboard macros.h"
+
+char *get_keyboard_input(sfEvent event, char *keys);
 
 sfRenderWindow *create_window(unsigned int width, unsigned int height)
 {
@@ -122,19 +125,21 @@ int get_slot_pos_x(int slot, sfRenderWindow *window)
     return (0);
 }
 
-void select_slot(sfRenderWindow *window, int slot)
+void select_slot(sfRenderWindow *window, int slot, char *keys)
 {
     int pos_x = get_slot_pos_x(slot, window);
     int pos_y = get_slot_pos_y(slot, window);
     sfSprite *sprite = sfSprite_create();
     sfTexture *texture = sfTexture_createFromFile("sprites/select.png", NULL);
     sfVector2f pos = {pos_x, pos_y};
-    if (slot != 0) {
-        sfSprite_setTexture(sprite, texture, 0);
-        sfSprite_setPosition(sprite, pos);
-        sfRenderWindow_drawSprite(window, sprite, NULL);
-        sfSprite_destroy(sprite);
-        sfTexture_destroy(texture);
+    if (LCLICK || RCLICK) {
+        if (slot != 0) {
+            sfSprite_setTexture(sprite, texture, 0);
+            sfSprite_setPosition(sprite, pos);
+            sfRenderWindow_drawSprite(window, sprite, NULL);
+            sfSprite_destroy(sprite);
+            sfTexture_destroy(texture);
+        }
     }
 }
 
@@ -182,60 +187,143 @@ struct item *split_item(int origin, int dest, struct item *items, int number)
 
 struct item *level_items(int dest, int origin, int max, struct item *items)
 {
+    if (items[dest].type == 0 && items[origin].type == 0)
+        return (items);
     if (items[dest].type != items[origin].type) {
         items[dest].sprite = sfSprite_copy(items[origin].sprite);
         items[dest].type = items[origin].type;
     }
     items[dest].quantity = items[origin].quantity - max + items[dest].quantity;
     items[origin].quantity = max;
+    return (items);
 }
 
-struct item *get_event(sfRenderWindow *window, struct item *items)
+struct item *pickup_item(struct item new, struct item *items)
+{
+    int free_spot = 0;
+
+    for (; items[free_spot].type != 0; free_spot++);
+    for (int i = 0; i < NB_SLOTS; i++) {
+        while (items[i].type == new.type && items[i].quantity < STACK_SIZE && new.quantity > 0) {
+            items[i].quantity += 1;
+            new.quantity -= 1;
+        }
+    }
+    items[free_spot] = new;
+    return (items);
+}
+
+int count_item(struct item *items, int type)
+{
+    int count = 0;
+
+    for (int i = NB_SLOTS - 1; i >= 0; i--)
+        if (items[i].type == type)
+            count += items[i].quantity;
+    return (count);
+}
+
+struct item *consume(struct item *items, int type, int quantity)
+{
+    int nb_items = count_item(items, type);
+    int j = 0;
+
+    if (quantity > nb_items)
+        return (items);
+    while (nb_items > 0) {
+        if (items[j].type != type)
+            j += 1;
+        while (items[j].type == type && items[j].quantity > 0) {
+            nb_items -= 1;
+            items[j].quantity -= 1;
+        }
+        if (items[j].quantity == 0)
+            items[j].type = 0;
+    }
+    return (items);
+}
+
+struct item *pickup_items(struct item *items, char *keys, int pressed, int slot)
+{
+    if (LCLICK == PRESS && !LSHIFT) {
+        swap_items(slot, 0, items);
+        pressed = slot;
+    }
+    if (LCLICK == PRESS && LSHIFT == HELD) {
+        level_items(0, slot, items[slot].quantity - 1, items);
+        pressed = slot;
+    }
+    if (RCLICK == PRESS && !LSHIFT) {
+        split_item(slot, 0, items, items[slot].quantity / 2);
+        pressed = slot;
+    }
+    if (RCLICK == PRESS && LSHIFT == HELD) {
+        level_items(0, slot, 1, items);
+        pressed = slot;
+    }
+    return (items);
+}
+
+struct item *drop_items(struct item *items, char *keys, int pressed, int slot)
+{
+    if (items[slot].type != items[0].type && slot != 0) {
+            swap_items(slot, 0, items);
+        if (items[slot].type == items[0].type && slot != 0)
+            add_items(0, slot, items);
+        if (items[pressed].type != items[0].type && slot == 0)
+            swap_items(pressed, 0, items);
+        if (items[pressed].type == items[0].type && slot == 0)
+            add_items(0, pressed, items);
+        if (items[slot].quantity > STACK_SIZE)
+            level_items(pressed, slot, STACK_SIZE, items);
+    }
+    return (items);
+}
+
+struct item *get_event(sfRenderWindow *window, struct item *items, int *page, char *keys)
 {
     sfEvent event;
     sfVector2i mousepos = sfMouse_getPositionRenderWindow(window);
-    static short pres;
-    static int pressed;
-    static int slot;
+    static int pressed = 0;
+    static int slot = 0;
     while (sfRenderWindow_pollEvent(window, &event)) {
+        keys = get_keyboard_input(event, keys);
+        if (D == PRESS && *page < 2)
+            *page += 1;
+        if (A == PRESS && *page > 1)
+            *page -= 1;
         slot = wich_slot_h(mousepos);
-        if (event.key.code == sfKeyEscape || event.type == sfEvtClosed)
+        if (ESC || event.type == sfEvtClosed)
             sfRenderWindow_close(window);
-        if ((event.type == sfEvtMouseButtonPressed & slot != 0)) {
-            pres = 1;
-            pressed = slot;
-            if (event.mouseButton.button == 0)
-                swap_items(slot, 0, items);
-            if (event.mouseButton.button == 1)
-                split_item(slot, 0, items, items[slot].quantity / 2);
-        }
-        if (event.type == sfEvtMouseButtonReleased && pres == 1) {
-            pres = 0;
-            if (items[slot].type != items[0].type && slot != 0)
-                swap_items(slot, 0, items);
-            if (items[slot].type == items[0].type && slot != 0)
-                add_items(0, slot, items);
-            if (items[pressed].type != items[0].type && slot == 0)
-                swap_items(pressed, 0, items);
-            if (items[pressed].type == items[0].type && slot == 0)
-                add_items(0, pressed, items);
-            if (items[slot].quantity > STACK_SIZE)
-                level_items(pressed, slot, STACK_SIZE, items);
-        }
+        if (event.type == sfEvtMouseButtonPressed && slot != 0 && items[slot].type != 0)
+            items = pickup_items(items, keys, pressed, slot);
+        if (LCLICK == RELEASE || RCLICK == RELEASE)
+            items = drop_items(items, keys, pressed, slot);
     }
-    if (pres == 1)
-        select_slot(window, slot);
+    select_slot(window, slot, keys);
     return(items);
 }
 
-void clear_window(sfRenderWindow *window)
+void clear_window(sfRenderWindow *window, int page)
 {
     sfSprite *sprite = sfSprite_create();
-    sfTexture *texture = sfTexture_createFromFile("sprites/bground.png", NULL);
-    sfSprite_setTexture(sprite, texture, 0);
+    sfTexture *page1 = sfTexture_createFromFile("sprites/bground.png", NULL);
+    sfTexture *page2 = sfTexture_createFromFile("sprites/ye_olde_map.png", NULL);
+    sfVector2f p2scale = {5, 5};
+    sfVector2f p2pos = {90, 0};
+
+    sfRenderWindow_clear(window, sfBlack);
+    if (page == 1)
+        sfSprite_setTexture(sprite, page1, 0);
+    if (page == 2) {
+        sfSprite_setTexture(sprite, page2, 0);
+        sfSprite_setScale(sprite, p2scale);
+        sfSprite_setPosition(sprite, p2pos);
+    }
     sfRenderWindow_drawSprite(window, sprite, NULL);
     sfSprite_destroy(sprite);
-    sfTexture_destroy(texture);
+    sfTexture_destroy(page1);
+    sfTexture_destroy(page2);
 }
 
 char *my_itos(int i)
@@ -290,6 +378,12 @@ void draw_items(sfRenderWindow *window, struct item *items)
 {
     sfVector2f pos = {0, 0};
 
+    for (int i = 0; i < NB_SLOTS; i++) {
+        if (items[i].quantity == 0) {
+            items[i].type = 0;
+            items[i].sprite = NULL;
+        }
+    }
     for (int i = NB_SLOTS - 1; i >= 0; i--) {
         if (items[i].quantity != 0) {
             pos.x = get_slot_pos_x(i, window);
@@ -303,13 +397,18 @@ void draw_items(sfRenderWindow *window, struct item *items)
 struct item *menu(sfRenderWindow *window, struct item *items)
 {
     sfSprite *mouse = setup_mouse();
+    int page = 1;
+    char *keys = malloc(sizeof(char) * 103);
+
     while (sfRenderWindow_isOpen(window)) {
-        clear_window(window);
-        get_event(window, items);
-        draw_items(window, items);
+        clear_window(window, page);
+        get_event(window, items, &page, keys);
+        if (page == 1)
+            draw_items(window, items);
         draw_mouse(window, mouse);
         sfRenderWindow_display(window);
     }
+    sfSprite_destroy(mouse);
     return (items);
 }
 
@@ -337,14 +436,11 @@ int main(void)
     struct item *items = create_items();
     sfRenderWindow *window = create_window(1920, 1080);
     sfVector2f pos = {970, 540};
-    //sfVector2f pos = {0, 0};
     int i = 1;
-    for (; i < 121; i++) {
+    for (; i < 50; i += i % 3) {
         items[i].quantity = (i * (i + i / 2) + 1) % 255;
         items[i].type = FLOWER_YELLOW;
         items[i].sprite = create_yellow_flower(items[i].sprite);
-        //pos.x = get_slot_pos_x(i, window);
-        //pos.y = get_slot_pos_y(i, window);
         sfSprite_setPosition(items[i].sprite, pos);
     }
     sfRenderWindow_setFramerateLimit(window, 60);
