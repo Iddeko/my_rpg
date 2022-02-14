@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "printf.h"
 #include "my.h"
 
 static void write_the_spaces_2(char *);

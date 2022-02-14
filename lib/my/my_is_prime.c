@@ -17,7 +17,7 @@ int my_is_prime(int nb)
         return (1);
     if (nb % 2 == 0)
         return (0);
-    for (int i = square_rooted; i >= 2; i --) {
+    for (int i = square_rooted; i >= 2; i--) {
         if (nb % i == 0)
             return (0);
     }
@@ -30,7 +30,7 @@ static int my_is_prime_square_root(int nb)
 
     for (int odd = 1; nb > 0; odd += 2) {
         nb -= odd;
-        compteur ++;
+        compteur++;
     }
     return (compteur);
 }

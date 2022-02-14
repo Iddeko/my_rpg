@@ -6,7 +6,7 @@
 */
 
 #include "libs.h"
-#include "keyboard macros.h"
+#include "keyboard_macros.h"
 #include <stdlib.h>
 
 char *press_buttons(sfEvent event, char *keys, int state)

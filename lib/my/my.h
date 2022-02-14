@@ -18,7 +18,7 @@ char *my_strncpy(char *, char const *, int);
 char *my_revstr(char *);
 char *my_strupcase(char *);
 char *my_strcapitalize(char *);
-char *my_strcat(char *, char const *);
+void my_strcat(char **, char const *);
 char my_getoperator(char const *);
 char **my_strsplit(char *, char);
 char *my_substr(int, int, char const *);
@@ -36,12 +36,14 @@ int my_str_isnum(char const *);
 int my_str_isprintable(char const *);
 int my_str_isupper(char const *);
 int my_strncmp(char const *, char const *, int);
+int my_strcmp(char const *, char const *);
 int my_getnbr(char const *);
 int my_char_isalpha(char const);
 int my_char_isnum(char const);
 int my_char_isoperator(char const);
 int my_str_isoperator(char const *);
 int my_strlen(char const *);
+int my_arrlen(char **);
 char *my_dec_to_base(long, char *);
 char *my_dec_to_base_long(long long, char *);
 char *my_dec_to_base_unsigned(unsigned long long, char *);
@@ -90,5 +92,11 @@ formats reset_struct(formats);
 formats modify_short(formats);
 formats modify_long(formats);
 formats modify_hashtag(formats);
+char *my_strcpy(char *, char const *);
+int number_of_lines(char *, char);
+int end_check(int *, int, char *);
+
+char *delete_all_char(char *, char);
+char *rename_all_char(char *, char, char);
 
 #endif /* !MY_LIB_H */

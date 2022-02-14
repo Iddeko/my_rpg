@@ -6,6 +6,7 @@
 ##
 
 SRC	=	my_swap.c \
+		my_arrlen.c \
 		my_strcat.c \
 		my_printf.c \
 		my_strcmp.c \
@@ -45,6 +46,8 @@ SRC	=	my_swap.c \
 		my_printf_unsigned.c \
 		my_printf_pointeur.c \
 		my_char_isoperator.c \
+		my_delete_all_char.c \
+		my_rename_all_char.c \
 		my_dec_to_base_long.c \
 		my_printf_types_int.c \
 		my_printf_modifiers.c \
@@ -53,15 +56,15 @@ SRC	=	my_swap.c \
 		my_dec_to_base_unsigned.c \
 
 OBJ =	$(SRC:.c=.o)
-INC =	-I ./
+CPPFLAGS =	-I ./
 NAME =	libmy.a
-
+CC = gcc
 MY =	my.h
 
 TEST = 	unit_tests
 TESTS = tests/test_lib.c
 
-CFLAGS += -Werror -Wextra -I.
+CFLAGS = -Werror -Wextra
 
 all: $(OBJ)
 	ar rc -o $(NAME) $(OBJ)

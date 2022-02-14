@@ -7,7 +7,7 @@
 
 int my_str_isalpha(char const *s)
 {
-    for (int i = 0 ; s[i] != '\0' ; i ++) {
+    for (int i = 0 ; s[i] != '\0' ; i++) {
         if ((s[i] >= 'A' && s[i] <= 'Z') || (s[i] >= 'a' && s[i] <= 'z'))
             return (1);
     }

@@ -15,14 +15,14 @@ int my_getnbr(char const *str)
     int count = 0;
     int step = 0;
 
-    for (int i = 0; str[i] != '\0' && my_char_isnum(str[i]) == 0; i ++) {
+    for (int i = 0; str[i] != '\0' && my_char_isnum(str[i]) == 0; i++) {
         if (my_char_isalpha(str[i]) == 1)
             return (0);
         if (str[i] == '-')
             count -= 1;
         if (str[i] == '+')
             count += 1;
-        step ++;
+        step++;
     }
     number = my_getnbr_2(str, step, count, number);
     if (count < 0 && count % 2 != 0)
@@ -33,7 +33,7 @@ int my_getnbr(char const *str)
 
 static int my_getnbr_2(char const *str, int step, int count, int number)
 {
-    for (int i = step; str[i] != '\0' && my_char_isnum(str[i]) == 1; i ++) {
+    for (int i = step; str[i] != '\0' && my_char_isnum(str[i]) == 1; i++) {
         if ((((long) number * 10 + (str[i]) - '0') <= 2147483648 &&
             (count < 0 && count % 2)) ||
             (((long) number * 10 + (str[i]) - '0') <= 2147483647 &&

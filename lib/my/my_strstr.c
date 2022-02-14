@@ -12,11 +12,11 @@ char *my_strstr(char *str, char const *to_find)
     int len = 0;
     int consecutive = 0;
 
-    for (int i = 0; to_find[i] != '\0'; i ++)
-        len ++;
-    for (int i = 0; str[i] != '\0'; i ++) {
+    for (int i = 0; to_find[i] != '\0'; i++)
+        len++;
+    for (int i = 0; str[i] != '\0'; i++) {
         if (str[i] == to_find[consecutive] && consecutive != len)
-            consecutive ++;
+            consecutive++;
         else if (str[i] != to_find[i] && consecutive != len)
             consecutive = 0;
         else

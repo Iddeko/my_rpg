@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "printf.h"
 #include "my.h"
 
 int write_int(va_list param, formats options, char *base)

@@ -11,17 +11,17 @@ char *my_revstr(char *str)
     int j = 0;
 
     while (str[j] != '\0')
-        j ++;
+        j++;
     char dest[j];
 
     while (str[i] != '\0') {
         dest[i] = str[i];
-        i ++;
+        i++;
     }
     i = 0;
     while (str[i] != '\0') {
         str[i] = dest[j - i - 1];
-        i ++;
+        i++;
     }
     dest[i] = '\0';
     return (str);

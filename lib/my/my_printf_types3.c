@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "printf.h"
 #include "my.h"
 
 static void print_spaces_c(formats);

@@ -243,40 +243,39 @@ struct item *consume(struct item *items, int type, int quantity)
     return (items);
 }
 
-struct item *pickup_items(struct item *items, char *keys, int pressed, int slot)
+struct item *pickup_items(struct item *items, char *keys, int *pressed, int slot)
 {
     if (LCLICK == PRESS && !LSHIFT) {
         swap_items(slot, 0, items);
-        pressed = slot;
+        *pressed = slot;
     }
     if (LCLICK == PRESS && LSHIFT == HELD) {
         level_items(0, slot, items[slot].quantity - 1, items);
-        pressed = slot;
+        *pressed = slot;
     }
     if (RCLICK == PRESS && !LSHIFT) {
         split_item(slot, 0, items, items[slot].quantity / 2);
-        pressed = slot;
+        *pressed = slot;
     }
     if (RCLICK == PRESS && LSHIFT == HELD) {
         level_items(0, slot, 1, items);
-        pressed = slot;
+        *pressed = slot;
     }
     return (items);
 }
 
 struct item *drop_items(struct item *items, char *keys, int pressed, int slot)
 {
-    if (items[slot].type != items[0].type && slot != 0) {
-            swap_items(slot, 0, items);
-        if (items[slot].type == items[0].type && slot != 0)
-            add_items(0, slot, items);
-        if (items[pressed].type != items[0].type && slot == 0)
-            swap_items(pressed, 0, items);
-        if (items[pressed].type == items[0].type && slot == 0)
-            add_items(0, pressed, items);
-        if (items[slot].quantity > STACK_SIZE)
-            level_items(pressed, slot, STACK_SIZE, items);
-    }
+    if (items[slot].type != items[0].type && slot != 0)
+        swap_items(slot, 0, items);
+    if (items[slot].type == items[0].type && slot != 0)
+        add_items(0, slot, items);
+    if (items[pressed].type != items[0].type && slot == 0)
+        swap_items(pressed, 0, items);
+    if (items[pressed].type == items[0].type && slot == 0)
+        add_items(0, pressed, items);
+    if (items[slot].quantity > STACK_SIZE)
+        level_items(pressed, slot, STACK_SIZE, items);
     return (items);
 }
 
@@ -296,7 +295,7 @@ struct item *get_event(sfRenderWindow *window, struct item *items, int *page, ch
         if (ESC || event.type == sfEvtClosed)
             sfRenderWindow_close(window);
         if (event.type == sfEvtMouseButtonPressed && slot != 0 && items[slot].type != 0)
-            items = pickup_items(items, keys, pressed, slot);
+            items = pickup_items(items, keys, &pressed, slot);
         if (LCLICK == RELEASE || RCLICK == RELEASE)
             items = drop_items(items, keys, pressed, slot);
     }
@@ -394,11 +393,10 @@ void draw_items(sfRenderWindow *window, struct item *items)
     }
 }
 
-struct item *menu(sfRenderWindow *window, struct item *items)
+struct item *menu(sfRenderWindow *window, struct item *items, char * keys)
 {
     sfSprite *mouse = setup_mouse();
     int page = 1;
-    char *keys = malloc(sizeof(char) * 103);
 
     while (sfRenderWindow_isOpen(window)) {
         clear_window(window, page);
@@ -436,6 +434,7 @@ int main(void)
     struct item *items = create_items();
     sfRenderWindow *window = create_window(1920, 1080);
     sfVector2f pos = {970, 540};
+    char *keys = malloc(sizeof(char) * 103);
     int i = 1;
     for (; i < 50; i += i % 3) {
         items[i].quantity = (i * (i + i / 2) + 1) % 255;
@@ -445,6 +444,7 @@ int main(void)
     }
     sfRenderWindow_setFramerateLimit(window, 60);
     sfRenderWindow_setMouseCursorVisible(window, 0);
-    menu(window, items);
+    menu(window, items, keys);
+    free(keys);
     return (0);
 }

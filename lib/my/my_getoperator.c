@@ -7,7 +7,7 @@
 
 char my_getoperator(char const *str)
 {
-    for (int i = 0; str[i] != '\0' ; i ++) {
+    for (int i = 0; str[i] != '\0' ; i++) {
         if (str[i] == '/')
             return ('/');
         if (str[i] == '*')
@@ -17,5 +17,5 @@ char my_getoperator(char const *str)
         if (str[i] == '-')
             return ('-');
     }
-    return(-1);
+    return (-1);
 }

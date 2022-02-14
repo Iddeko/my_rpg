@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "printf.h"
 #include "my.h"
 
 static int write_binary_long(va_list, formats, char *);
@@ -22,7 +21,7 @@ int write_binary(va_list param, formats options, char *base)
 
         print_spaces(options, str);
         if (options.is_hasht == 1) {
-            write(1, "0b",2);
+            write(1, "0b", 2);
             write(1, str, my_strlen(str));
             print_spaces_minus(options, str);
             return (short_or_normal(options, my_strlen(options.number) + 1));
@@ -42,7 +41,7 @@ static int write_binary_long(va_list param, formats options, char *base)
 
     print_spaces(options, str);
     if (options.is_hasht == 1) {
-        write(1, "0b",2);
+        write(1, "0b", 2);
         write(1, str, my_strlen(str));
         print_spaces_minus(options, str);
         return (long_or_normal(options, my_strlen(options.number) + 1));

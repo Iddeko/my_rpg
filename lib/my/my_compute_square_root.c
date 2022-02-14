@@ -12,7 +12,7 @@ int my_compute_square_root(int nb)
 
     while (nb > 0) {
         nb -= odd;
-        compteur ++;
+        compteur++;
         odd += 2;
     }
     if (nb < 0)

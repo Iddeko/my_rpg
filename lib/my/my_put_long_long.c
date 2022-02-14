@@ -13,7 +13,7 @@ void my_put_long_long(long long nb)
 
     if (nb <= 9 && nb != -9223372036854775807) {
         if (nb < 0) {
-            write(1,"-",1);
+            write(1, "-", 1);
             my_put_long_long(nb * -1);
         } else {
             cha[0] = nb + '0';

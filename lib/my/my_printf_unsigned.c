@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "printf.h"
 #include "my.h"
 
 static int write_unsigned_long(va_list, formats, char *);

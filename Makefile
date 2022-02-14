@@ -1,37 +1,69 @@
 ##
 ## EPITECH PROJECT, 2021
-## my_rpg
+## My_RPG
 ## File description:
-## makefile
+## MAKEFILE
 ##
 
-SRC =	clear_utils.c \
-		create_utils.c \
-		event_handler.c \
-		setup_utils.c \
-		write_usage.c \
+## ===========================================================
+## ===========================[VAR]===========================
+## ===========================================================
 
-MAIN =	main.c \
+NAME			=			my_rpg
 
-OBJ = $(SRC:.c=.o)
-MAINOBJ = $(MAIN:.c=.o)
+NAME_TEST		=			unit_test
 
-NAME = my_rpg
-CFLAGS = -I include/
-LIB = lib/libmy.a
-CFLAGS += -Wall -Wextra -g3
-LDFLAGS = -lcsfml-graphics -lcsfml-window -lcsfml-system -lm
+## ==========================[PATHS]==========================
 
-all: $(NAME)
+SRC_PATH		=			src/
 
-$(NAME): $(OBJ) $(MAINOBJ)
-	make re -C lib/my/
-	gcc -o $(NAME) $(OBJ) $(MAINOBJ) $(LIB) $(CFLAGS) $(LDFLAGS)
+## ===========================[SRC]===========================
 
-re: fclean all
+SRC				=			$(SRC_PATH)menu.c				\
+							$(SRC_PATH)get_keyboard_input.c	\
 
-clean:
-	rm -f $(OBJ)
+main			=											\
 
-fclean: clean
-	rm -f $(NAME)
+OBJ				=			$(SRC:.c=.o)
+
+CRIT			=			-lcriterion --coverage
+
+## =========================[OPTIONS]=========================
+
+FLAGS		=	-Wall \
+				-Wextra \
+
+CPPFLAGS	=	-I include/
+
+LDFLAGS		=	-L lib -lmy
+
+LIB			=	lib/libmy.a \
+				-lcsfml-graphics \
+				-lcsfml-system \
+				-lcsfml-audio \
+				-lcsfml-window \
+
+## ===========================================================
+## ==========================[RULES]==========================
+## ===========================================================
+
+all			:	$(OBJ)
+				make re -C lib/my/
+				$(CC) $(FLAGS) -o $(NAME) $(OBJ) $(LIB) $(CPPFLAGS) $(LDFLAGS)
+
+clean		:
+				$(RM) -f $(OBJ)
+
+fclean		:	clean
+				$(RM) -f $(NAME)
+
+re			:	clean all
+
+plus		:	all clean
+				clear;
+
+obj			:	$(OBJ)
+
+## ===========================[END]===========================
+
+.PHONY:	all	re	clean	fclean	tests_run

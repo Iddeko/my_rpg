@@ -11,11 +11,11 @@ char *my_strcapitalize(char *str)
 {
     if ('a' < str[0] && str[0] < 'z')
         str[0] -= 32;
-    for (int i = 1 ; str[i] != '\0' ; i ++) {
+    for (int i = 1 ; str[i] != '\0' ; i++) {
         if ('A' < str[i] && str[i] < 'Z')
             str[i] += 32;
         if ('a' < str[i] && str[i] < 'z')
-            my_strcapitalize_second(str,i);
+            my_strcapitalize_second(str, i);
     }
     return (str);
 }

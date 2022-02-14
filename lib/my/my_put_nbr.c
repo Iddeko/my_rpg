@@ -13,7 +13,7 @@ void my_put_nbr(int nb)
 
     if (nb <= 9 && nb != -2147483648) {
         if (nb < 0) {
-            write(1,"0",1);
+            write(1, "0", 1);
             my_put_nbr(nb * -1);
         } else {
             cha[0] = nb + '0';
