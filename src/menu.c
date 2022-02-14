@@ -424,7 +424,7 @@ struct item *create_items(void)
 
 sfSprite *create_yellow_flower(sfSprite *sprite)
 {
-    sfTexture *texture = sfTexture_createFromFile("y_flower.png", NULL);
+    sfTexture *texture = sfTexture_createFromFile("sprites/y_flower.png", NULL);
     sfSprite_setTexture(sprite, texture, 0);
     return (sprite);
 }
