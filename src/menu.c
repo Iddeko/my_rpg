@@ -434,7 +434,10 @@ int main(void)
     struct item *items = create_items();
     sfRenderWindow *window = create_window(1920, 1080);
     sfVector2f pos = {970, 540};
-    char *keys = malloc(sizeof(char) * 103);
+    char *keys = malloc(sizeof(char) * 105);
+    for (int i = 0; i <= 103; i++)
+        keys[i] = 0;
+    keys[104] = '\0';
     int i = 1;
     for (; i < 50; i += i % 3) {
         items[i].quantity = (i * (i + i / 2) + 1) % 255;
@@ -445,6 +448,7 @@ int main(void)
     sfRenderWindow_setFramerateLimit(window, 60);
     sfRenderWindow_setMouseCursorVisible(window, 0);
     menu(window, items, keys);
+    free(items);
     free(keys);
     return (0);
 }
