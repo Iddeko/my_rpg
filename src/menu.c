@@ -5,6 +5,7 @@
 ** setup and main loop
 */
 
+#include "my.h"
 #include "includes.h"
 #include "keyboard_macros.h"
 
@@ -18,8 +19,6 @@ sfRenderWindow *create_window(unsigned int width, unsigned int height)
     video_mode.height = height;
     video_mode.width = width;
     video_mode.bitsPerPixel = 16;
-
-
     window = sfRenderWindow_create(video_mode, "runner", sfDefaultStyle, NULL);
     return (window);
 }
@@ -28,6 +27,7 @@ sfSprite *setup_mouse(void)
 {
     sfSprite *mouse = sfSprite_create();
     sfTexture *tex = sfTexture_createFromFile("sprites/cursors.png", NULL);
+
     sfSprite_setTexture(mouse, tex, 0);
     return (mouse);
 }
@@ -35,6 +35,7 @@ sfSprite *setup_mouse(void)
 sfVector2f itofv2(sfVector2i vector)
 {
     sfVector2f result;
+
     result.x = vector.x;
     result.y = vector.y;
     return (result);
@@ -43,6 +44,7 @@ sfVector2f itofv2(sfVector2i vector)
 void draw_mouse(sfRenderWindow *window, sfSprite *mouse)
 {
     sfVector2f mousepos;
+
     mousepos = itofv2(sfMouse_getPositionRenderWindow(window));
     sfSprite_setPosition(mouse, mousepos);
     sfRenderWindow_drawSprite(window, mouse, NULL);
@@ -129,6 +131,7 @@ void select_slot(sfRenderWindow *window, int slot, char *keys)
 {
     int pos_x = get_slot_pos_x(slot, window);
     int pos_y = get_slot_pos_y(slot, window);
+
     sfSprite *sprite = sfSprite_create();
     sfTexture *texture = sfTexture_createFromFile("sprites/select.png", NULL);
     sfVector2f pos = {pos_x, pos_y};
@@ -141,22 +144,6 @@ void select_slot(sfRenderWindow *window, int slot, char *keys)
             sfTexture_destroy(texture);
         }
     }
-}
-
-int my_strlen(char *str)
-{
-    int i = 0;
-    for (; str[i] != '\0'; i++);
-    return (i);
-}
-
-char *my_strdup(char *str)
-{
-    char *result = malloc(sizeof (char) * my_strlen(str) + 1);
-    for (int i = 0; str[i] != '\0'; i++)
-        result[i] = str[i];
-    result[my_strlen(str)] = '\0';
-    return (result);
 }
 
 struct item *swap_items(int origin, int dest, struct item *items)
@@ -409,7 +396,6 @@ struct item *menu(sfRenderWindow *window, struct item *items, char * keys)
     sfSprite_destroy(mouse);
     return (items);
 }
-
 
 struct item *create_items(void)
 {
