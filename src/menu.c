@@ -312,32 +312,16 @@ void clear_window(sfRenderWindow *window, int page)
     sfTexture_destroy(page2);
 }
 
-char *my_itos(int i)
-{
-    int n = 0;
-    char *result;
-    int temp = i;
-    for (n = 0; temp != 0; n++)
-        temp /= 10;
-    result = malloc(sizeof(char) * n + 1);
-    for (int j = 0; j < n; j ++) {
-        result[n - j - 1] = (i % 10) + '0';
-        i = i / 10;
-    }
-    result[n] = '\0';
-    return (result);
-}
-
 void draw_end_at(sfRenderWindow *window, struct item item)
 {
     sfText *text = sfText_create();
     sfFont *font = sfFont_createFromFile("font.TTF");
-    sfVector2f origin = {my_strlen(my_itos(item.quantity)) * 15, 30};
+    sfVector2f origin = {my_strlen(my_dec_to_base(item.quantity, "0123456789")) * 15, 30};
     sfVector2f pos = sfSprite_getPosition(item.sprite);
     pos.x += 100;
     pos.y += 100;
     sfText_setFont(text, font);
-    sfText_setString(text, my_itos(item.quantity));
+    sfText_setString(text, my_dec_to_base(item.quantity, "0123456789"));
     sfText_setCharacterSize(text, 25);
     sfText_setColor(text, sfWhite);
     sfText_setOutlineThickness(text, 1);
