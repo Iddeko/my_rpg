@@ -6,15 +6,7 @@
 */
 
 #include "csfml_libs.h"
-
-sfVector2f itofv2(sfVector2i vector)
-{
-    sfVector2f result;
-
-    result.x = vector.x;
-    result.y = vector.y;
-    return (result);
-}
+#include "csfml_utils.h"
 
 sfSprite *setup_mouse(void)
 {

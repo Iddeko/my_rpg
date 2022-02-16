@@ -18,10 +18,10 @@
 
     #include "csfml_libs.h"
 
-    struct item {
-        sfSprite *sprite;
-        int quantity;
-        int type;
-    };
+struct item {
+    sfSprite *sprite;
+    int quantity;
+    int type;
+};
 
 #endif /* !structures */

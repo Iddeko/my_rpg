@@ -23,6 +23,7 @@ SRC				=			$(SRC_PATH)menu.c				\
 							$(SRC_PATH)get_keyboard_input.c	\
 							$(SRC_PATH)pause_menu.c			\
 							$(SRC_PATH)mouse.c				\
+							$(SRC_PATH)csfml_utils.c		\
 
 main			=											\
 
