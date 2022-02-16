@@ -10,7 +10,7 @@
 #include "pause_menu.h"
 #include "csfml_libs.h"
 #include "mouse.h"
-#include "menu.h"
+#include "inventory.h"
 
 #include <stdio.h>
 #include <unistd.h>
