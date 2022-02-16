@@ -5,8 +5,6 @@
 ** here be definitions
 */
 
-#include "includes.h"
-
 #ifndef structures
     #define structures
 
@@ -17,6 +15,8 @@
     #define STACK_SIZE 255
     #define SCALEX 1
     #define SCALEY 1
+
+    #include "csfml_libs.h"
 
     struct item {
         sfSprite *sprite;

@@ -5,8 +5,9 @@
 ** returns a char * with the keyboard key pressed
 */
 
-#include "libs.h"
-#include "keyboard_macros.h"
+#include "csfml_libs.h"
+#include "keyboard.h"
+
 #include <stdlib.h>
 
 char *press_buttons(sfEvent event, char *keys, int state)

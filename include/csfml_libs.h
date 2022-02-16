@@ -1,20 +1,17 @@
 /*
 ** EPITECH PROJECT, 2022
-** menu - libs
+** my_rpg_temp
 ** File description:
-** here be inclusions
+** csfml_libs
 */
 
-#ifndef libs
-    #define libs
+#ifndef CSFML_LIBS_H_
+    #define CSFML_LIBS_H_
 
     #include <SFML/Graphics/RenderWindow.h>
     #include <SFML/Graphics/Sprite.h>
     #include <SFML/Graphics/Texture.h>
     #include <SFML/Graphics/Text.h>
     #include <SFML/Graphics/Font.h>
-    #include <stdio.h>
-    #include <unistd.h>
-    #include <stdlib.h>
 
-#endif /* !libs */
+#endif /* !CSFML_LIBS_H_ */

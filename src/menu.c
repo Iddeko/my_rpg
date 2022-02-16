@@ -6,10 +6,15 @@
 */
 
 #include "my.h"
-#include "includes.h"
-#include "keyboard_macros.h"
+#include "keyboard.h"
+#include "pause_menu.h"
+#include "csfml_libs.h"
+#include "mouse.h"
+#include "menu.h"
 
-char *get_keyboard_input(sfEvent event, char *keys);
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 sfRenderWindow *create_window(unsigned int width, unsigned int height)
 {
@@ -21,33 +26,6 @@ sfRenderWindow *create_window(unsigned int width, unsigned int height)
     video_mode.bitsPerPixel = 16;
     window = sfRenderWindow_create(video_mode, "runner", sfDefaultStyle, NULL);
     return (window);
-}
-
-sfSprite *setup_mouse(void)
-{
-    sfSprite *mouse = sfSprite_create();
-    sfTexture *tex = sfTexture_createFromFile("sprites/cursors.png", NULL);
-
-    sfSprite_setTexture(mouse, tex, 0);
-    return (mouse);
-}
-
-sfVector2f itofv2(sfVector2i vector)
-{
-    sfVector2f result;
-
-    result.x = vector.x;
-    result.y = vector.y;
-    return (result);
-}
-
-void draw_mouse(sfRenderWindow *window, sfSprite *mouse)
-{
-    sfVector2f mousepos;
-
-    mousepos = itofv2(sfMouse_getPositionRenderWindow(window));
-    sfSprite_setPosition(mouse, mousepos);
-    sfRenderWindow_drawSprite(window, mouse, NULL);
 }
 
 int wich_slot_w(int i, sfVector2i mousepos)
@@ -279,8 +257,10 @@ struct item *get_event(sfRenderWindow *window, struct item *items, int *page, ch
         if (A == PRESS && *page > 1)
             *page -= 1;
         slot = wich_slot_h(mousepos);
-        if (ESC || event.type == sfEvtClosed)
+        if (event.type == sfEvtClosed)
             sfRenderWindow_close(window);
+        if (ESC == PRESS)
+            pause_menu(window, keys);
         if (event.type == sfEvtMouseButtonPressed && slot != 0 && items[slot].type != 0)
             items = pickup_items(items, keys, &pressed, slot);
         if (LCLICK == RELEASE || RCLICK == RELEASE)
