@@ -295,7 +295,7 @@ void clear_window(sfRenderWindow *window, int page)
 void draw_end_at(sfRenderWindow *window, struct item item)
 {
     sfText *text = sfText_create();
-    sfFont *font = sfFont_createFromFile("font.TTF");
+    sfFont *font = sfFont_createFromFile("fonts/pixel.TTF");
     sfVector2f origin = {my_strlen(my_dec_to_base(item.quantity, "0123456789")) * 15, 30};
     sfVector2f pos = sfSprite_getPosition(item.sprite);
     pos.x += 100;

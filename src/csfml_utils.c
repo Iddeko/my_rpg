@@ -26,6 +26,27 @@ sfVector2f utofv2(sfVector2u vector)
     return (result);
 }
 
+/*
+sfText_setFont(text, font);
+sfText_setCharacterSize(text, 25);
+sfText_setColor(text, sfWhite);
+sfText_setOutlineThickness(text, 1);
+sfText_setOutlineColor(text, sfBlack);
+*/
+
+text create_text(char *font, char *string, sfVector2f origin, sfVector2f pos)
+{
+    text new_text;
+
+    new_text.text = sfText_create();
+    new_text.font = sfFont_createFromFile(font);
+    sfText_setFont(new_text.text, new_text.font);
+    sfText_setString(new_text.text, string);
+    sfText_setOrigin(new_text.text, origin);
+    sfText_setPosition(new_text.text, pos);
+    return (new_text);
+}
+
 object create_object(char *path, sfVector2f scale, sfVector2f pos)
 {
     object new_object;
